@@ -1,0 +1,7 @@
+#!/bin/bash
+
+STATS=$(./stats.sh)
+
+echo "
+$STATS
+" > /etc/motd

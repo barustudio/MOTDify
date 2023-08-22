@@ -1,0 +1,57 @@
+#!/bin/bash
+
+center_text() {
+    local WIDTH=80
+    local TEXT="$1"
+
+    # Calculate padding
+    local TOTAL_PADDING=$((WIDTH - 2 - ${#TEXT}))
+    local PADDING_LEFT=$(($TOTAL_PADDING / 2))
+    local PADDING_RIGHT=$PADDING_LEFT
+
+    # If the width is odd, adjust the right padding
+    if [ $((TOTAL_PADDING % 2)) -ne 0 ]; then
+        PADDING_RIGHT=$(($PADDING_RIGHT + 1))
+    fi
+
+    # Print the centered text
+    printf "|%${PADDING_LEFT}s%s%${PADDING_RIGHT}s|\n" "" "$TEXT" ""
+}
+
+CPUTIME=$(ps -eo pcpu | awk 'NR>1' | awk '{tot=tot+$1} END {print tot}')
+CPUCORES=$(cat /proc/cpuinfo | grep -c processor)
+UP=$(echo `uptime` | awk '{ print $3 " " $4 }')
+DATE=$(date)
+
+echo "
+--------------------------------------------------------------------------------
+`center_text "SYSTEM STATUS"`
+`center_text "($DATE)"`
+--------------------------------------------------------------------------------
+
+💻 Server Information
+--------------------------------------------------------------------------------
+   - Name         : `hostname`
+   - IP           : `dig +short myip.opendns.com @resolver1.opendns.com`
+   - OS Version   : `cat /etc/redhat-release`
+   - Platform Data: `uname -orpi`
+
+📊 Performance Metrics:
+--------------------------------------------------------------------------------
+   - Uptime             : `echo $UP`
+   - Load Averages      : `cat /proc/loadavg`
+   - CPU Usage (average): `echo $CPUTIME / $CPUCORES | bc`%
+
+🧠 Memory Stats:
+--------------------------------------------------------------------------------
+   - Free (real) : `free -m | head -n 2 | tail -n 1 | awk {'print $4'}` Mb
+   - Free (cache): `free -m | head -n 3 | tail -n 1 | awk {'print $3'}` Mb
+   - Swap in use : `free -m | tail -n 1 | awk {'print $3'}` Mb
+
+💾 Disk Information:
+--------------------------------------------------------------------------------
+   - Total Space: `df / | awk 'NR==2 { printf "%.1fG\n", $2/1024/1024 }'`
+   - Used       : `df / | awk 'NR==2 { printf "%.1fG (%s)\n", $3/1024/1024, $5 }'`
+   - Free       : `df / | awk 'NR==2 { printf "%.1fG\n", $4/1024/1024 }'`
+
+"
