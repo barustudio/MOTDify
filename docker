@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Assign an emoji for each Docker Status
+get_status_emoji() {
+    local status="$1"
+    case "$status" in
+        *Up*)      echo -e "\e[32m🟢\e[0m" ;;  # Green
+        *Paused*)  echo -e "\e[33m🟢\e[0m" ;;  # Yellow
+        *Exited*)  echo -e "\e[31m🟢\e[0m" ;;  # Red
+        *)         echo -e "\e[37m❓\e[0m" ;;  # Grey
+    esac
+}
+
+echo "
+🐳 Docker Status:
+--------------------------------------------------------------------------------"
+
+docker ps -a --format "{{.ID}}\t{{.Names}}\t{{.Status}}" | while read -r container_id name status; do
+    STATUS_EMOJI=$(get_status_emoji "$status")
+    echo "   - $STATUS_EMOJI $container_id $name"
+done
