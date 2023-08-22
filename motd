@@ -1,7 +1,7 @@
 #!/bin/bash
 
-STATS=$(./stats.sh)
-DOCKER=$(./stats_docker.sh)
+STATS=$(./stats)
+DOCKER=$(./docker)
 
 echo "
 $STATS
