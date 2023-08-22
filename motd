@@ -1,9 +1,11 @@
 #!/bin/bash
 
+ASCII_ART=$(./random_ascii)
 STATS=$(./stats)
 DOCKER=$(./docker)
 
 echo "
+$ASCII_ART
 $STATS
 $DOCKER
 " > /etc/motd

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Define the delimiter and filename
+DELIMITER="^---baru$"
+FILENAME="./ascii_art.txt"
+
+# Count the number of delimiters in the file (which is equal to the number of ASCII arts)
+NUM_ARTS=$(grep -c "$DELIMITER" $FILENAME)
+
+# Generate a random number between 1 and NUM_ARTS
+#RANDOM_INDEX=$(( ( RANDOM % $NUM_ARTS ) + 2 ))
+RANDOM_INDEX=1 # BaruStudio Logo
+
+# Extract and display the ASCII art at the random index
+start_line=$(($(grep -n "$DELIMITER" "$FILENAME" | cut -d: -f1 | sed -n "${RANDOM_INDEX}p") + 1))
+end_line=$(($(grep -n "$DELIMITER" "$FILENAME" | cut -d: -f1 | sed -n "$((${RANDOM_INDEX} + 1))p") - 1))
+
+sed -n "${start_line},${end_line}p" "$FILENAME"
