@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ASCII_ART=$(./random_ascii)
+ASCII_ART=$(./ascii)
 STATS=$(./stats)
 DOCKER=$(./docker)
 
