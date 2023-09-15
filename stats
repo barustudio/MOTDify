@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source ./text_format
 source ./text_fn
 
 TOTAL_LOAD=$( awk -v cpus=$(nproc) '{printf "%.0f%% (1 min) | %.0f%% (5 min) | %.0f%% (15 min)\n", ($1*100)/cpus, ($2*100)/cpus, ($3*100)/cpus}' /proc/loadavg)
@@ -8,22 +9,32 @@ CPUCORES=$(nproc)
 UP=$(echo `uptime` | awk '{ print $3 " " $4 }')
 DATE=$(date)
 
-echo "
+echo -e "${bold}
 --------------------------------------------------------------------------------
 `center_text "SYSTEM STATUS"`
 `center_text "($DATE)"`
---------------------------------------------------------------------------------
+--------------------------------------------------------------------------------${reset}
 
 `section_title 💻 "Server Information"`
+   - Name         : ${italic}`hostname`${ritalic}
+   - IP           : ${italic}`dig +short myip.opendns.com @resolver1.opendns.com`${ritalic}
+   - OS Version   : ${italic}`cat /etc/redhat-release`${ritalic}
+   - Platform Data: ${italic}`uname -orpi`${ritalic}
 
 `section_title 📊 "Performance Metrics"`
---------------------------------------------------------------------------------
-   - Uptime             : $UP
-   - Load Averages      : $TOTAL_LOAD
-   - CPU Usage (average): `echo $CPUTIME / $CPUCORES | bc`%
+   - Uptime             : ${italic}$UP${ritalic}
+   - Total Load Average : ${italic}$TOTAL_LOAD${ritalic}
+   - CPUs               : ${italic}$CPUCORES Core(s)${ritalic}
+   - CPU Usage (average): ${italic}`echo $CPUTIME / $CPUCORES | bc`%${ritalic}
 
 `section_title 🧠 "Memory Stats"`
+   - Total: ${italic}`free -mh | awk 'NR==2 { print $2 " ("$3" used)" }'`${ritalic}
+   - Free : ${italic}`free -mh | awk 'NR==2 { print $4 " ("$7" available)" }'`${ritalic}
+   - Swap : ${italic}`free -mh | awk 'NR==3 { print $2 " ("$3" used)" }'`${ritalic}
 
 `section_title 💾 "Disk Information"`
+   - Total Space: ${italic}`df / | awk 'NR==2 { printf "%.1fG\n", $2/1024/1024 }'`${ritalic}
+   - Used       : ${italic}`df / | awk 'NR==2 { printf "%.1fG (%s)\n", $3/1024/1024, $5 }'`${ritalic}
+   - Free       : ${italic}`df / | awk 'NR==2 { printf "%.1fG\n", $4/1024/1024 }'`${ritalic}
 
 "
