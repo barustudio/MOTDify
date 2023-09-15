@@ -44,9 +44,9 @@ echo "
 
 🧠 Memory Stats:
 --------------------------------------------------------------------------------
-   - Free (real) : `free -m | head -n 2 | tail -n 1 | awk {'print $4'}` Mb
-   - Free (cache): `free -m | head -n 3 | tail -n 1 | awk {'print $3'}` Mb
-   - Swap in use : `free -m | tail -n 1 | awk {'print $3'}` Mb
+   - Total: `free -mh | awk 'NR==2 { print $2 " ("$3" used)" }'`
+   - Free : `free -mh | awk 'NR==2 { print $4 " ("$7" available)" }'`
+   - Swap : `free -mh | awk 'NR==3 { print $2 " ("$3" used)" }'`
 
 💾 Disk Information:
 --------------------------------------------------------------------------------
