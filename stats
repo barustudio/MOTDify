@@ -18,8 +18,9 @@ center_text() {
     printf "|%${PADDING_LEFT}s%s%${PADDING_RIGHT}s|\n" "" "$TEXT" ""
 }
 
+TOTAL_LOAD=$( awk -v cpus=$(nproc) '{printf "%.0f%% (1 min) | %.0f%% (5 min) | %.0f%% (15 min)\n", ($1*100)/cpus, ($2*100)/cpus, ($3*100)/cpus}' /proc/loadavg)
 CPUTIME=$(ps -eo pcpu | awk 'NR>1' | awk '{tot=tot+$1} END {print tot}')
-CPUCORES=$(cat /proc/cpuinfo | grep -c processor)
+CPUCORES=$(nproc)
 UP=$(echo `uptime` | awk '{ print $3 " " $4 }')
 DATE=$(date)
 
@@ -38,8 +39,8 @@ echo "
 
 📊 Performance Metrics:
 --------------------------------------------------------------------------------
-   - Uptime             : `echo $UP`
-   - Load Averages      : `cat /proc/loadavg`
+   - Uptime             : $UP
+   - Load Averages      : $TOTAL_LOAD
    - CPU Usage (average): `echo $CPUTIME / $CPUCORES | bc`%
 
 🧠 Memory Stats:
