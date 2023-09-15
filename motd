@@ -1,11 +1,22 @@
 #!/bin/bash
 
+DEBUG=0
+if [ "$1" == "--debug" ]; then
+    DEBUG=1
+fi
+
 ASCII_ART=$(./ascii)
 STATS=$(./stats)
 DOCKER=$(./docker)
 
-echo "
+OUTPUT=$(echo "
 $ASCII_ART
 $STATS
 $DOCKER
-" > /etc/motd
+")
+
+if [ $DEBUG -eq 1 ]; then
+    echo "$OUTPUT"
+else
+    echo "$OUTPUT" > /etc/motd
+fi
