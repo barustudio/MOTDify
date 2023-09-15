@@ -1,22 +1,6 @@
 #!/bin/bash
 
-center_text() {
-    local WIDTH=80
-    local TEXT="$1"
-
-    # Calculate padding
-    local TOTAL_PADDING=$((WIDTH - 2 - ${#TEXT}))
-    local PADDING_LEFT=$(($TOTAL_PADDING / 2))
-    local PADDING_RIGHT=$PADDING_LEFT
-
-    # If the width is odd, adjust the right padding
-    if [ $((TOTAL_PADDING % 2)) -ne 0 ]; then
-        PADDING_RIGHT=$(($PADDING_RIGHT + 1))
-    fi
-
-    # Print the centered text
-    printf "|%${PADDING_LEFT}s%s%${PADDING_RIGHT}s|\n" "" "$TEXT" ""
-}
+source ./text_fn
 
 TOTAL_LOAD=$( awk -v cpus=$(nproc) '{printf "%.0f%% (1 min) | %.0f%% (5 min) | %.0f%% (15 min)\n", ($1*100)/cpus, ($2*100)/cpus, ($3*100)/cpus}' /proc/loadavg)
 CPUTIME=$(ps -eo pcpu | awk 'NR>1' | awk '{tot=tot+$1} END {print tot}')
@@ -30,29 +14,16 @@ echo "
 `center_text "($DATE)"`
 --------------------------------------------------------------------------------
 
-💻 Server Information
---------------------------------------------------------------------------------
-   - Name         : `hostname`
-   - IP           : `dig +short myip.opendns.com @resolver1.opendns.com`
-   - OS Version   : `cat /etc/redhat-release`
-   - Platform Data: `uname -orpi`
+`section_title 💻 "Server Information"`
 
-📊 Performance Metrics:
+`section_title 📊 "Performance Metrics"`
 --------------------------------------------------------------------------------
    - Uptime             : $UP
    - Load Averages      : $TOTAL_LOAD
    - CPU Usage (average): `echo $CPUTIME / $CPUCORES | bc`%
 
-🧠 Memory Stats:
---------------------------------------------------------------------------------
-   - Total: `free -mh | awk 'NR==2 { print $2 " ("$3" used)" }'`
-   - Free : `free -mh | awk 'NR==2 { print $4 " ("$7" available)" }'`
-   - Swap : `free -mh | awk 'NR==3 { print $2 " ("$3" used)" }'`
+`section_title 🧠 "Memory Stats"`
 
-💾 Disk Information:
---------------------------------------------------------------------------------
-   - Total Space: `df / | awk 'NR==2 { printf "%.1fG\n", $2/1024/1024 }'`
-   - Used       : `df / | awk 'NR==2 { printf "%.1fG (%s)\n", $3/1024/1024, $5 }'`
-   - Free       : `df / | awk 'NR==2 { printf "%.1fG\n", $4/1024/1024 }'`
+`section_title 💾 "Disk Information"`
 
 "

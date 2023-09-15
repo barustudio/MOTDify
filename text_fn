@@ -1,0 +1,28 @@
+#!/bin/bash
+
+center_text() {
+    local WIDTH=80
+    local TEXT="$1"
+
+    # Calculate padding
+    local TOTAL_PADDING=$((WIDTH - 2 - ${#TEXT}))
+    local PADDING_LEFT=$(($TOTAL_PADDING / 2))
+    local PADDING_RIGHT=$PADDING_LEFT
+
+    # If the width is odd, adjust the right padding
+    if [ $((TOTAL_PADDING % 2)) -ne 0 ]; then
+        PADDING_RIGHT=$(($PADDING_RIGHT + 1))
+    fi
+
+    # Print the centered text
+    printf "|%${PADDING_LEFT}s%s%${PADDING_RIGHT}s|\n" "" "$TEXT" ""
+}
+
+section_title() {
+   local ICON="$1"
+   local TITLE="$2"
+
+   echo -e "
+\e[32m$ICON\e[0m \e[1m$TITLE\e[22m
+--------------------------------------------------------------------------------"
+}

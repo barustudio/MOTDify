@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ./text_fn
+
 # Assign an emoji for each Docker Status
 get_status_emoji() {
     local status="$1"
@@ -11,9 +13,8 @@ get_status_emoji() {
     esac
 }
 
-echo "
-🐳 Docker Status:
---------------------------------------------------------------------------------"
+echo ''
+section_title 🐳 "Docker Status"
 
 docker ps -a --format "{{.ID}}\t{{.Names}}\t{{.Status}}" | while read -r container_id name status; do
     STATUS_EMOJI=$(get_status_emoji "$status")
